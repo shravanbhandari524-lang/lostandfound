@@ -2,38 +2,36 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PillButton from '../../components/ui/PillButton'
 import { ROUTES } from '../../constants/routes'
-import { fadeInUp } from '../../constants/motion'
+import { fadeInUp, staggerContainer } from '../../constants/motion'
 
 /*
-  Home Dashboard — primary landing page.
-  Shows an empty state until real data is connected from the backend.
+  Home Dashboard — two side-by-side panels: Lost | Found.
+  Each panel shows an empty state until the backend is connected.
 */
 function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <motion.div
         variants={fadeInUp}
         initial="hidden"
         animate="show"
-        className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between"
+        className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"
       >
-        {/* Left: title + subtitle */}
         <div>
           <h1
             className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl"
             style={{ letterSpacing: '-1px' }}
           >
-            Lost &amp; Found
+            Dashboard
           </h1>
           <p className="mt-2 text-sm text-ink-muted">
             Report a lost item or help someone find theirs
           </p>
         </div>
 
-        {/* Right: action pill buttons */}
         <div className="flex shrink-0 items-center gap-3">
           <PillButton
             id="btn-report-lost"
@@ -56,55 +54,132 @@ function HomePage() {
         </div>
       </motion.div>
 
-      {/* ── Empty state ─────────────────────────────────────────────────── */}
-      <EmptyState onLost={() => navigate(ROUTES.LOST)} onFound={() => navigate(ROUTES.FOUND)} />
+      {/* ── Two-panel grid ──────────────────────────────────────────────── */}
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 gap-5 lg:grid-cols-2"
+      >
+        <ItemPanel
+          type="lost"
+          label="Lost Items"
+          color="text-lost"
+          accent="#ff5a7a"
+          emptyMessage="No lost items reported yet."
+          onAction={() => navigate(ROUTES.LOST)}
+          actionLabel="Report Lost"
+        />
+        <ItemPanel
+          type="found"
+          label="Found Items"
+          color="text-found"
+          accent="#34d17d"
+          emptyMessage="No found items reported yet."
+          onAction={() => navigate(ROUTES.FOUND)}
+          actionLabel="Report Found"
+        />
+      </motion.div>
     </div>
   )
 }
 
-/* Empty state — shown when no items exist yet */
-function EmptyState({ onLost, onFound }) {
+/* ── Single panel (Lost or Found) ─────────────────────────────────────────── */
+function ItemPanel({ label, color, accent, emptyMessage, onAction, actionLabel }) {
+  // items = [] until wired to backend
+  const items = []
+
   return (
-    <motion.div
+    <motion.section
       variants={fadeInUp}
-      initial="hidden"
-      animate="show"
-      className="flex flex-col items-center justify-center rounded-[30px] px-8 py-24 text-center"
-      style={{
-        background:
-          'radial-gradient(ellipse at 50% 0%, #1e1b4b 0%, #0a0a0b 70%)',
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}
+      className="flex flex-col rounded-xl bg-surface-1 ring-1 ring-white/5 overflow-hidden"
+      style={{ minHeight: '480px' }}
     >
-      {/* Icon */}
+      {/* Panel header */}
+      <div className="flex items-center justify-between border-b border-hairline-soft px-6 py-4">
+        <div className="flex items-center gap-2.5">
+          <span
+            className="h-2.5 w-2.5 rounded-full"
+            style={{ backgroundColor: accent }}
+            aria-hidden="true"
+          />
+          <h2 className={`text-sm font-semibold tracking-tight ${color}`}>
+            {label}
+          </h2>
+        </div>
+        <span className="rounded-md bg-surface-2 px-2 py-0.5 text-xs font-medium text-ink-muted">
+          {items.length}
+        </span>
+      </div>
+
+      {/* Panel body */}
+      <div className="flex flex-1 flex-col">
+        {items.length === 0 ? (
+          <PanelEmptyState
+            message={emptyMessage}
+            actionLabel={actionLabel}
+            onAction={onAction}
+            accent={accent}
+          />
+        ) : (
+          <ul className="divide-y divide-hairline-soft">
+            {items.map((item) => (
+              <li key={item.id} className="px-6 py-4 text-sm text-ink">
+                {item.title}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </motion.section>
+  )
+}
+
+/* Empty state inside a panel */
+function PanelEmptyState({ message, actionLabel, onAction, accent }) {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 py-16 text-center">
       <div
-        className="mb-6 grid h-16 w-16 place-items-center rounded-full bg-surface-2"
+        className="grid h-12 w-12 place-items-center rounded-full"
+        style={{ backgroundColor: `${accent}18` }}
         aria-hidden="true"
       >
-        <SearchIcon />
+        <InboxIcon accent={accent} />
       </div>
-
-      <h2
-        className="text-xl font-semibold tracking-tight text-ink"
-        style={{ letterSpacing: '-0.5px' }}
+      <div>
+        <p className="text-sm font-medium text-ink">{message}</p>
+        <p className="mt-1 text-xs text-ink-muted">
+          Items will appear here once reports are submitted.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onAction}
+        className="mt-1 rounded-pill px-4 py-2 text-xs font-medium transition-opacity hover:opacity-80 cursor-pointer"
+        style={{ backgroundColor: `${accent}18`, color: accent }}
       >
-        No items yet
-      </h2>
-      <p className="mt-2 max-w-xs text-sm leading-relaxed text-ink-muted">
-        Be the first to post a report. It only takes a moment and could make someone's day.
-      </p>
+        {actionLabel}
+      </button>
+    </div>
+  )
+}
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <PillButton id="empty-btn-lost" variant="secondary" onClick={onLost}>
-          <PlusIcon />
-          Report Lost
-        </PillButton>
-        <PillButton id="empty-btn-found" variant="primary" onClick={onFound}>
-          <PlusIcon />
-          Report Found
-        </PillButton>
-      </div>
-    </motion.div>
+function InboxIcon({ accent }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={accent}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </svg>
   )
 }
 
@@ -123,26 +198,6 @@ function PlusIcon() {
     >
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  )
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="text-ink-muted"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   )
 }
