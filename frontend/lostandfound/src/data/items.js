@@ -1,0 +1,78 @@
+import { ITEM_STATUS } from '../constants/itemStatus'
+
+// Dummy Lost & Found items used to populate the dashboard.
+// Replace with real data once the backend is wired up.
+export const items = [
+  {
+    id: 1,
+    status: ITEM_STATUS.LOST,
+    title: 'Black Leather Wallet',
+    description: 'Bifold wallet with a few cards inside. Lost near the library entrance.',
+    location: 'Central Library',
+    date: '2026-07-16',
+    category: 'Accessories',
+  },
+  {
+    id: 2,
+    status: ITEM_STATUS.FOUND,
+    title: 'Blue Hydro Flask Bottle',
+    description: 'A dented blue water bottle left on a bench outside Block C.',
+    location: 'Block C Courtyard',
+    date: '2026-07-17',
+    category: 'Bottles',
+  },
+  {
+    id: 3,
+    status: ITEM_STATUS.LOST,
+    title: 'AirPods Pro (2nd Gen)',
+    description: 'White charging case with a small scratch on the lid.',
+    location: 'Cafeteria, Table 12',
+    date: '2026-07-15',
+    category: 'Electronics',
+  },
+  {
+    id: 4,
+    status: ITEM_STATUS.FOUND,
+    title: 'Set of Keys with Red Tag',
+    description: 'Three keys on a ring with a red keychain tag. Found in Parking Lot B.',
+    location: 'Parking Lot B',
+    date: '2026-07-17',
+    category: 'Keys',
+  },
+  {
+    id: 5,
+    status: ITEM_STATUS.LOST,
+    title: 'Grey North Face Backpack',
+    description: 'Contains a laptop and notebooks. Straps have a keychain attached.',
+    location: 'Lecture Hall 3',
+    date: '2026-07-14',
+    category: 'Bags',
+  },
+  {
+    id: 6,
+    status: ITEM_STATUS.FOUND,
+    title: 'Prescription Glasses',
+    description: 'Thin gold-rimmed glasses in a brown case. Found on the shuttle bus.',
+    location: 'Campus Shuttle',
+    date: '2026-07-16',
+    category: 'Accessories',
+  },
+  {
+    id: 7,
+    status: ITEM_STATUS.LOST,
+    title: 'Samsung Galaxy S24',
+    description: 'Black phone in a clear case. Screen has a small crack in the top corner.',
+    location: 'Sports Complex',
+    date: '2026-07-18',
+    category: 'Electronics',
+  },
+  {
+    id: 8,
+    status: ITEM_STATUS.FOUND,
+    title: 'Red Umbrella',
+    description: 'Compact folding umbrella with a strap, left near the main gate.',
+    location: 'Main Gate',
+    date: '2026-07-18',
+    category: 'Accessories',
+  },
+]
