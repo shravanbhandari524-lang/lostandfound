@@ -1,15 +1,28 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PillButton from '../../components/ui/PillButton'
+import StatsBanner from '../../components/ui/StatsBanner'
 import { ROUTES } from '../../constants/routes'
 import { fadeInUp, staggerContainer } from '../../constants/motion'
+import { useItems } from '../../context/ItemsContext'
+import { formatDate } from '../../utils/formatDate'
 
 /*
   Home Dashboard — two side-by-side panels: Lost | Found.
-  Each panel shows an empty state until the backend is connected.
+  Shows list of items from ItemsContext (persisted locally).
 */
 function HomePage() {
   const navigate = useNavigate()
+  const { items } = useItems()
+
+  // Calculate statistics for StatsBanner
+  const lostCount = items.filter(
+    (item) => item.status === 'lost' || item.type === 'lost'
+  ).length
+  const foundCount = items.filter(
+    (item) => item.status === 'found' || item.type === 'found'
+  ).length
+  const total = items.length
 
   return (
     <div className="space-y-8">
@@ -23,7 +36,7 @@ function HomePage() {
         <div>
           <h1
             className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl"
-            style={{ letterSpacing: '-1px' }}
+            style={{ letterSpacing: '-1.5px' }}
           >
             Dashboard
           </h1>
@@ -53,6 +66,9 @@ function HomePage() {
           </PillButton>
         </div>
       </motion.div>
+
+      {/* ── Stats Banner ────────────────────────────────────────────────── */}
+      <StatsBanner lostCount={lostCount} foundCount={foundCount} total={total} />
 
       {/* ── Two-panel grid ──────────────────────────────────────────────── */}
       <motion.div
@@ -85,21 +101,25 @@ function HomePage() {
 }
 
 /* ── Single panel (Lost or Found) ─────────────────────────────────────────── */
-function ItemPanel({ label, color, accent, emptyMessage, onAction, actionLabel }) {
-  // items = [] until wired to backend
-  const items = []
+function ItemPanel({ type, label, color, accent, emptyMessage, onAction, actionLabel }) {
+  const { items } = useItems()
+
+  // Filter items by type (supporting both legacy status and new type fields)
+  const filteredItems = items.filter(
+    (item) => item.status === type || item.type === type
+  )
 
   return (
     <motion.section
       variants={fadeInUp}
-      className="flex flex-col rounded-xl bg-surface-1 ring-1 ring-white/5 overflow-hidden"
+      className="flex flex-col rounded-xl bg-surface-1 ring-1 ring-white/5 overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
       style={{ minHeight: '480px' }}
     >
       {/* Panel header */}
-      <div className="flex items-center justify-between border-b border-hairline-soft px-6 py-4">
+      <div className="flex items-center justify-between border-b border-hairline-soft px-6 py-4 bg-surface-1/40 backdrop-blur-sm">
         <div className="flex items-center gap-2.5">
           <span
-            className="h-2.5 w-2.5 rounded-full"
+            className="h-2.5 w-2.5 rounded-full animate-pulse"
             style={{ backgroundColor: accent }}
             aria-hidden="true"
           />
@@ -107,14 +127,14 @@ function ItemPanel({ label, color, accent, emptyMessage, onAction, actionLabel }
             {label}
           </h2>
         </div>
-        <span className="rounded-md bg-surface-2 px-2 py-0.5 text-xs font-medium text-ink-muted">
-          {items.length}
+        <span className="rounded-md bg-surface-2 px-2 py-0.5 text-xs font-medium text-ink-muted border border-hairline-soft">
+          {filteredItems.length}
         </span>
       </div>
 
       {/* Panel body */}
       <div className="flex flex-1 flex-col">
-        {items.length === 0 ? (
+        {filteredItems.length === 0 ? (
           <PanelEmptyState
             message={emptyMessage}
             actionLabel={actionLabel}
@@ -122,10 +142,34 @@ function ItemPanel({ label, color, accent, emptyMessage, onAction, actionLabel }
             accent={accent}
           />
         ) : (
-          <ul className="divide-y divide-hairline-soft">
-            {items.map((item) => (
-              <li key={item.id} className="px-6 py-4 text-sm text-ink">
-                {item.title}
+          <ul className="divide-y divide-hairline-soft overflow-y-auto max-h-[420px] custom-scrollbar">
+            {filteredItems.map((item) => (
+              <li
+                key={item.id || item.createdAt}
+                className="px-6 py-4.5 transition-colors hover:bg-surface-2/20 flex flex-col gap-2"
+              >
+                <div className="flex justify-between items-start gap-4">
+                  <h3 className="text-sm font-semibold text-ink leading-tight">
+                    {item.productName || item.title}
+                  </h3>
+                  <span className="text-[11px] font-medium text-ink-muted whitespace-nowrap bg-surface-2/65 px-2 py-0.5 rounded border border-hairline-soft">
+                    {formatDate(item.date)}
+                  </span>
+                </div>
+                <p className="text-xs leading-relaxed text-ink-muted line-clamp-2">
+                  {item.description}
+                </p>
+                <div className="mt-1 flex items-center justify-between gap-4">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-ink-muted/80">
+                    <LocationIcon />
+                    {item.location}
+                  </span>
+                  {item.category && (
+                    <span className="rounded-sm bg-surface-2/40 px-1.5 py-0.5 text-[10px] font-medium text-ink-muted border border-hairline-soft/40">
+                      {item.category}
+                    </span>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -198,6 +242,25 @@ function PlusIcon() {
     >
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  )
+}
+
+function LocationIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   )
 }

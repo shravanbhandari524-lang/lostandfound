@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '../../constants/motion'
-import { ITEM_STATUS } from '../../constants/itemStatus'
 
 /*
   StatsBanner — three pill chips showing total / lost / found counts.
