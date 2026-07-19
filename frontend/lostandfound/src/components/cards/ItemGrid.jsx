@@ -11,15 +11,20 @@ import { staggerContainer } from '../../constants/motion'
 */
 const SPOTLIGHT_INJECT_AT = 2
 
-function ItemGrid({ items }) {
+function ItemGrid({ items, type = 'lost' }) {
   // Build display slots: splice in the spotlight card at the defined index
   const slots = []
   items.forEach((item, idx) => {
     if (idx === SPOTLIGHT_INJECT_AT) {
       slots.push({ type: 'spotlight', id: 'spotlight' })
     }
-    slots.push({ type: 'item', id: item.id, item })
+    slots.push({ type: 'item', id: item.id || item.createdAt, item })
   })
+
+  // If there are fewer than 3 items, we should still inject the spotlight card at the end so it's always shown
+  if (items.length <= SPOTLIGHT_INJECT_AT) {
+    slots.push({ type: 'spotlight', id: 'spotlight' })
+  }
 
   return (
     <motion.div
@@ -30,7 +35,7 @@ function ItemGrid({ items }) {
     >
       {slots.map((slot) =>
         slot.type === 'spotlight' ? (
-          <SpotlightCard key="spotlight" />
+          <SpotlightCard key="spotlight" type={type} />
         ) : (
           <ItemCard key={slot.id} item={slot.item} />
         ),

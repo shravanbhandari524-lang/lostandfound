@@ -8,6 +8,7 @@ import HomePage from './pages/Home/HomePage'
 import LostPage from './pages/Lost/LostPage'
 import FoundPage from './pages/Found/FoundPage'
 import { ROUTES } from './constants/routes'
+import { ItemsProvider } from './context/ItemsContext'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ItemsProvider>
+      <RouterProvider router={router} />
+    </ItemsProvider>
   </StrictMode>,
 )
