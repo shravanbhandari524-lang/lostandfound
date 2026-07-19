@@ -11,10 +11,25 @@ import { staggerContainer, fadeInUp } from '../../constants/motion'
 */
 
 const ACCENT = '#34d17d' // --color-found
+const SPOTLIGHT_INJECT_AT = 2
 
 function FoundItemGrid({ items, onRemove }) {
   if (items.length === 0) {
     return <GridEmptyState />
+  }
+
+  // Build display slots: splice in spotlight card at index 2
+  const slots = []
+  items.forEach((item, idx) => {
+    if (idx === SPOTLIGHT_INJECT_AT) {
+      slots.push({ type: 'spotlight', id: 'spotlight-accent' })
+    }
+    slots.push({ type: 'item', id: item.id || item.createdAt, item })
+  })
+
+  // If there are fewer than 3 items, append the spotlight card to the end so it is always visible
+  if (items.length <= SPOTLIGHT_INJECT_AT) {
+    slots.push({ type: 'spotlight', id: 'spotlight-accent' })
   }
 
   return (
@@ -26,20 +41,17 @@ function FoundItemGrid({ items, onRemove }) {
       className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
     >
       <AnimatePresence mode="popLayout">
-        {/* Build a flat list: splice in spotlight card at slot 2 */}
-        {items.flatMap((item, idx) => {
-          const card = (
+        {slots.map((slot) =>
+          slot.type === 'spotlight' ? (
+            <FoundSpotlightCard key="spotlight-accent" />
+          ) : (
             <FoundItemCard
-              key={item.id}
-              item={item}
+              key={slot.id}
+              item={slot.item}
               onRemove={onRemove}
             />
           )
-          if (idx === 2 && items.length > 3) {
-            return [<FoundSpotlightCard key="spotlight-accent" />, card]
-          }
-          return [card]
-        })}
+        )}
       </AnimatePresence>
     </motion.div>
   )
@@ -54,14 +66,15 @@ function FoundSpotlightCard() {
       style={{
         background:
           'radial-gradient(ellipse at 30% 30%, #2aff96 0%, #00c97a 35%, #006644 70%, #001a10 100%)',
-        minHeight: '200px',
+        boxShadow: '0 20px 60px rgba(52, 209, 125, 0.15)',
+        minHeight: '220px',
       }}
       aria-hidden="true"
     >
       <div>
         <p
           className="text-2xl font-semibold text-canvas/90 leading-tight"
-          style={{ letterSpacing: '-1px' }}
+          style={{ letterSpacing: '-1.5px' }}
         >
           Every found item
           <br />
@@ -70,7 +83,7 @@ function FoundSpotlightCard() {
           relief.
         </p>
       </div>
-      <p className="mt-6 text-sm text-canvas/60">
+      <p className="text-xs text-canvas/60 font-medium tracking-wide">
         Keep reporting. Keep reuniting.
       </p>
     </motion.div>
@@ -85,7 +98,7 @@ function GridEmptyState() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="flex flex-col items-center justify-center gap-5 rounded-xl
-                 bg-surface-1 ring-1 ring-white/5 py-24 text-center"
+                 bg-surface-1 ring-1 ring-white/5 py-24 text-center border border-hairline-soft"
     >
       <span
         className="flex h-14 w-14 items-center justify-center rounded-full"

@@ -4,7 +4,7 @@ import PillButton from '../ui/PillButton'
 import { cn } from '../../utils/cn'
 
 /*
-  AddFoundItemModal — slide-up modal for reporting a found item.
+  AddLostItemModal — slide-up modal for reporting a lost item.
   Accepts onAdd(item) callback; generates a unique id internally.
   Design tokens: DESIGN.md surfaces, pill button, blue focus ring,
   level-2 card shadow, Framer Motion AnimatePresence.
@@ -66,7 +66,7 @@ const inputCls =
   'focus:outline-none focus:ring-1 focus:ring-accent-blue/60 ' +
   'focus:shadow-[0_0_0_1px_rgba(0,153,255,0.15)]'
 
-function AddFoundItemModal({ isOpen, onClose, onAdd }) {
+function AddLostItemModal({ isOpen, onClose, onAdd }) {
   const uid = useId()
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState({})
@@ -93,7 +93,7 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
       return
     }
     onAdd({
-      type: 'found',
+      type: 'lost',
       productName: form.productName.trim(),
       description: form.description.trim(),
       location: form.location.trim(),
@@ -146,7 +146,7 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
               <div className="flex items-center gap-3">
                 <span
                   className="flex h-8 w-8 items-center justify-center rounded-full"
-                  style={{ backgroundColor: 'rgba(52,209,125,0.12)' }}
+                  style={{ backgroundColor: 'rgba(255,90,122,0.12)' }}
                   aria-hidden="true"
                 >
                   <SearchIcon />
@@ -156,7 +156,7 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
                   className="text-base font-semibold tracking-tight text-ink"
                   style={{ letterSpacing: '-0.5px' }}
                 >
-                  Report a Found Item
+                  Report a Lost Item
                 </h2>
               </div>
               <button
@@ -182,13 +182,13 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
                   <div className="relative">
                     <input
                       type="text"
-                      value="Found (automatically assigned)"
+                      value="Lost (automatically assigned)"
                       disabled
                       readOnly
                       className="w-full rounded-md border border-hairline-soft bg-surface-2/40 px-4 py-2.5 text-sm text-ink-muted cursor-not-allowed outline-none select-none"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <span className="h-2 w-2 rounded-full bg-found inline-block" />
+                      <span className="h-2 w-2 rounded-full bg-lost inline-block" />
                     </div>
                   </div>
                 </div>
@@ -220,16 +220,16 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
                     id={`${uid}-description`}
                     value={form.description}
                     onChange={(e) => change('description', e.target.value)}
-                    placeholder="Distinctive marks, color, brand, condition…"
+                    placeholder="Distinctive marks, color, brand, contents…"
                     rows={3}
                     className={cn(inputCls, 'resize-none leading-relaxed')}
                   />
                 </Field>
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* Location Found */}
+                  {/* Location Lost */}
                   <Field
-                    label="Location Found"
+                    label="Location Lost"
                     id={`${uid}-location`}
                     error={errors.location}
                   >
@@ -243,9 +243,9 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
                     />
                   </Field>
 
-                  {/* Date Found */}
+                  {/* Date Lost */}
                   <Field
-                    label="Date Found"
+                    label="Date Lost"
                     id={`${uid}-date`}
                     error={errors.date}
                   >
@@ -277,7 +277,7 @@ function AddFoundItemModal({ isOpen, onClose, onAdd }) {
                   id={`${uid}-submit`}
                 >
                   <PlusIcon />
-                  Add Found Item
+                  Add Lost Item
                 </PillButton>
               </div>
             </form>
@@ -297,7 +297,7 @@ function SearchIcon() {
       height="16"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#34d17d"
+      stroke="#ff5a7a"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -366,4 +366,4 @@ function AlertIcon() {
   )
 }
 
-export default AddFoundItemModal
+export default AddLostItemModal

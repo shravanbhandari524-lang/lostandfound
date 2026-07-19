@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import ItemCard from './ItemCard'
 import SpotlightCard from './SpotlightCard'
 import { staggerContainer } from '../../constants/motion'
@@ -31,15 +31,18 @@ function ItemGrid({ items, type = 'lost' }) {
       variants={staggerContainer}
       initial="hidden"
       animate="show"
+      layout
       className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
     >
-      {slots.map((slot) =>
-        slot.type === 'spotlight' ? (
-          <SpotlightCard key="spotlight" type={type} />
-        ) : (
-          <ItemCard key={slot.id} item={slot.item} />
-        ),
-      )}
+      <AnimatePresence mode="popLayout">
+        {slots.map((slot) =>
+          slot.type === 'spotlight' ? (
+            <SpotlightCard key="spotlight" type={type} />
+          ) : (
+            <ItemCard key={slot.id} item={slot.item} />
+          ),
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

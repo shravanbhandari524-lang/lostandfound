@@ -14,9 +14,15 @@ function ItemCard({ item }) {
 
   return (
     <motion.article
+      layout
       variants={fadeInUp}
       whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+      exit={{
+        opacity: 0,
+        scale: 0.92,
+        transition: { duration: 0.22, ease: [0.4, 0, 1, 1] },
+      }}
       className="group flex flex-col rounded-xl bg-surface-1 p-5
                  ring-1 ring-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
     >

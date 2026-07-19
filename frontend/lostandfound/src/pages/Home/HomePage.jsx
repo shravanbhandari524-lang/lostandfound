@@ -142,7 +142,7 @@ function ItemPanel({ type, label, color, accent, emptyMessage, onAction, actionL
             accent={accent}
           />
         ) : (
-          <ul className="divide-y divide-hairline-soft overflow-y-auto max-h-[420px] custom-scrollbar">
+          <ul className="divide-y divide-hairline-soft overflow-y-auto max-h-[420px] no-scrollbar">
             {filteredItems.map((item) => (
               <li
                 key={item.id || item.createdAt}

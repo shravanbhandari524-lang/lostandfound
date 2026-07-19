@@ -14,16 +14,31 @@ function SpotlightCard({ type = 'lost' }) {
     ? {
         background: 'radial-gradient(ellipse at 30% 20%, #ff5a7a 0%, #7c3aed 45%, #111827 100%)',
         boxShadow: '0 20px 60px rgba(255, 90, 122, 0.15)',
-        title: 'Every lost item has a path back home.',
+        title: (
+          <>
+            Every lost item
+            <br />
+            has a path
+            <br />
+            back home.
+          </>
+        ),
         description: 'Keep reporting. Keep reuniting.',
-        emoji: '🔍',
       }
     : {
-        background: 'radial-gradient(ellipse at 30% 20%, #34d17d 0%, #0d9488 45%, #111827 100%)',
+        background:
+          'radial-gradient(ellipse at 30% 30%, #2aff96 0%, #00c97a 35%, #006644 70%, #001a10 100%)',
         boxShadow: '0 20px 60px rgba(52, 209, 125, 0.15)',
-        title: "Every found item is someone's relief.",
+        title: (
+          <>
+            Every found item
+            <br />
+            is someone's
+            <br />
+            relief.
+          </>
+        ),
         description: 'Keep reporting. Keep reuniting.',
-        emoji: '🤝',
       }
 
   return (
@@ -31,36 +46,25 @@ function SpotlightCard({ type = 'lost' }) {
       variants={fadeInUp}
       whileHover={{ scale: 1.015 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-      className="flex flex-col justify-between rounded-[30px] p-8 min-h-[250px]"
+      className="flex flex-col justify-between rounded-[30px] p-8"
       style={{
         background: styles.background,
         boxShadow: styles.boxShadow,
+        minHeight: '220px',
       }}
-      aria-label={styles.title}
+      aria-label={isLost ? 'Every lost item has a path back home.' : "Every found item is someone's relief."}
     >
-      {/* Decorative glyph */}
-      <div className="mb-6">
-        <span
-          className="text-4xl"
-          role="img"
-          aria-hidden="true"
-        >
-          {styles.emoji}
-        </span>
-      </div>
-
-      {/* Copy */}
       <div>
         <p
-          className="text-xl font-semibold leading-snug text-white"
-          style={{ letterSpacing: '-0.5px' }}
+          className="text-2xl font-semibold text-white/95 leading-tight"
+          style={{ letterSpacing: '-1.5px' }}
         >
           {styles.title}
         </p>
-        <p className="mt-3 text-xs leading-relaxed text-white/70 uppercase font-semibold tracking-wider">
-          {styles.description}
-        </p>
       </div>
+      <p className="text-xs text-white/60 font-medium tracking-wide">
+        {styles.description}
+      </p>
     </motion.div>
   )
 }

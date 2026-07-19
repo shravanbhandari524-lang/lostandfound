@@ -24,12 +24,23 @@ export function ItemsProvider({ children }) {
     setItems((prev) => [newItem, ...prev])
   }
 
+  const addFoundItem = (item) => {
+    const newItem = {
+      id: `found-${Date.now()}`,
+      status: 'found', // Compatibility status field
+      title: item.productName, // Compatibility title field
+      category: 'Found', // Default category
+      ...item, // Includes type: 'found', productName, description, location, date, createdAt
+    }
+    setItems((prev) => [newItem, ...prev])
+  }
+
   const deleteItem = (id) => {
     setItems((prev) => prev.filter((item) => (item.id || item.createdAt) !== id))
   }
 
   return (
-    <ItemsContext.Provider value={{ items, addLostItem, deleteItem }}>
+    <ItemsContext.Provider value={{ items, addLostItem, addFoundItem, deleteItem }}>
       {children}
     </ItemsContext.Provider>
   )
