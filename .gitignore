@@ -1,0 +1,135 @@
+# =========================
+# Node.js / React / Vite
+# =========================
+node_modules/
+dist/
+build/
+coverage/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# =========================
+# .NET / ASP.NET Core
+# =========================
+bin/
+obj/
+publish/
+TestResults/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# Temporary Files
+# =========================
+tmp/
+temp/
+
+# =========================
+# Secrets
+# =========================
+secrets.json
+
+# =========================
+# Package managers
+# =========================
+package-lock.json
+# Uncomment if you DON'T want to commit it.
+# For most projects, it's recommended to KEEP package-lock.json tracked.
+
+# =========================
+# Generated files
+# =========================
+*.cache
+*.pid
+*.seed
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# React / Vite
+# =========================
+frontend/lostandfound/node_modules/
+frontend/lostandfound/dist/
+frontend/lostandfound/dist-ssr/
+frontend/lostandfound/*.local
+
+# =========================
+# .NET
+# =========================
+backend/api/bin/
+backend/api/obj/
+backend/api/publish/
+backend/api/TestResults/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+!.vscode/extensions.json
+
+# =========================
+# Visual Studio / Rider
+# =========================
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ntvs*
+*.njsproj
+*.sw?
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
